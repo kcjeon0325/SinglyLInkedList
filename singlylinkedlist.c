@@ -6,7 +6,11 @@ typedef struct elementT {
 	struct elementT *next;
 } element;
 
-int insert_singlylinkedlist(element **head, int data)
+
+/*
+insert new data to head in singly linked list
+*/
+int insert_data_head_sllist(element **head, int data)
 {
 	element *new;
 	new = (element *) malloc(sizeof(element));
@@ -17,6 +21,7 @@ int insert_singlylinkedlist(element **head, int data)
 	}
 	else
 	{
+		printf("add %p\n", new);
 		new->data = data;
 		new->next = *head;
 		*head = new;
@@ -24,7 +29,10 @@ int insert_singlylinkedlist(element **head, int data)
 	}
 }
 
-element *find_singlylinkedlist(element *head, int value)
+/*
+find data in singly linked list
+*/
+element *find_data_sllist(element *head, int value)
 {
 	while(head)
 	{
@@ -34,7 +42,10 @@ element *find_singlylinkedlist(element *head, int value)
 	return NULL;
 }
 
-void display_singlylinkedlist(element *head)
+/*
+display data of singly linked list
+*/
+void display_data_sllist(element *head)
 {
 	int linknumber = 0;
 
@@ -45,24 +56,73 @@ void display_singlylinkedlist(element *head)
 	}
 }
 
+/*
+delete singly linked list
+*/
+int delete_sllist(element *head)
+{
+	element *next;
+	element *delete = head;
+
+	while(delete)
+	{
+		next = delete->next;
+		free(delete);
+		printf("delete %p\n", delete);
+		delete = next;
+	}
+}
+
+/*
+delete node singly linked list
+*/
+int delete_data_sllist(element **head, element *deleteme)
+{
+	element *curr = *head;
+
+	if(*head == deleteme)
+	{
+		*head = deleteme->next;
+		free(deleteme);
+		printf("delete %p\n", deleteme);
+		return 1;
+	}
+	while(curr)
+	{
+		if(curr->next == deleteme)
+		{
+			curr->next = deleteme->next;
+			free(deleteme);
+			printf("delete %p\n", deleteme);
+			return 1;
+		}
+		else
+			curr = curr->next;
+	}
+	return 0; 
+
+}
+
 int main()
 {
 	element *head = 0;
+	element *ele;
 	int status;
 
-	display_singlylinkedlist(head);
+	display_data_sllist(head);
 	
-	status = insert_singlylinkedlist(&head, 2);
-	status = insert_singlylinkedlist(&head, 3);
-	printf("element with %d is at %p\n", 5, find_singlylinkedlist(head, 5));
-	status = insert_singlylinkedlist(&head, 4);
-	status = insert_singlylinkedlist(&head, 5);
-	printf("element with %d is at %p %d\n", 5, find_singlylinkedlist(head, 5), find_singlylinkedlist(head, 5)->data);
+	status = insert_data_head_sllist(&head, 2);
+	status = insert_data_head_sllist(&head, 3);
+	status = insert_data_head_sllist(&head, 4);
+	status = insert_data_head_sllist(&head, 5);
+	printf("element with %d is at %p %d\n", 3, find_data_sllist(head, 3), find_data_sllist(head, 3)->data);
 	if(status)
 	{
 		printf("%s %d fail to insert new\n", __FILE__, __LINE__);
 		return -1;
 	}
-	
-	display_singlylinkedlist(head);
+	ele = find_data_sllist(head, 3);
+	delete_data_sllist(&head, ele);
+	display_data_sllist(head);
+	delete_sllist(head);
 }
